@@ -9,7 +9,7 @@ E-commerce Web Application NestJS
 1- Création de l'application Backend
  - création des entités
  - Installation de OpenORM
- - Connection à la base de données
+ - Connection à la base de données (Creation de .env)
  - Créaton de CRUD pour produits et catégories
  - Géneration de services
 
