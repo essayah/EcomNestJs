@@ -21,6 +21,6 @@ export class Product{
     createdAt : Date;
 
     @ManyToOne(type=>Category, category => category.products)
-    category : Category ; 
+    category : Category;
 
 }
