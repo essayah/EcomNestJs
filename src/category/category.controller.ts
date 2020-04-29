@@ -1,24 +1,26 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { CategoryService } from './category.service';
-import { CategoryDTO } from 'src/entitiesDTO/category.dto';
+import { CategoryDTO } from 'src/shared/entitiesDTO/category.dto';
+import { CreateOrUpdateCategoryDTO } from 'src/shared/entitiesDTO/create-update-category.dto';
 
 @Controller('category')
 export class CategoryController {
 
-    constructor(private categoryService: CategoryService) { }
+    constructor(public categoryService: CategoryService) { }
 
     @Get()
-    showAllCategories() {
-        return this.categoryService.showAllCategories();
+    showAllCategories(){
+       return this.categoryService.showAllCategories();
     }
 
+
     @Post()
-    createCategory(@Body() data: CategoryDTO) {
-        return this.categoryService.createCategory(data);
+   async createCategory(@Body() data: CreateOrUpdateCategoryDTO): Promise <CategoryDTO> {
+        return await this.categoryService.createCategory(data);
     }
 
     @Get(':id')
-    getCategoryById(@Param('id') id: number) {
+    getCategoryById(@Param('id') id: number) : Promise <CategoryDTO> {
 
         return this.categoryService.getCategoryById(id);
     }
@@ -26,12 +28,12 @@ export class CategoryController {
 
     @Put(':id')
     updateCategory(@Param('id') id: number, @Body() data: Partial<CategoryDTO>) {
-        return this.categoryService.updateCategory(id, data);
+         return this.categoryService.updateCategory(id, data);
     }
 
     @Delete(':id')
     deleteCategory(@Param('id') id: number) {
-        return this.categoryService.deleteCategory(id);
+       return this.categoryService.deleteCategory(id);
     }
 
 }

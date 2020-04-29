@@ -6,8 +6,8 @@ import { TypeOrmModule} from '@nestjs/typeorm';
 import { ProductModule } from './product/product.module'; 
 import { CategoryModule} from './category/category.module';
 
-import {Category} from './entity/category.entity';
-import { Product } from './entity/product.entity';
+import {Category} from './shared/entity/category.entity';
+import { Product } from './shared/entity/product.entity';
 
 @Module({
   imports: [

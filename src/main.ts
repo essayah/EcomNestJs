@@ -20,7 +20,7 @@ async function bootstrap() {
   .setTitle('Ecommerce Application')
   .setDescription('API de Mon premiere applicaton Nest')
   .setVersion('1.0')
-  .addTag('Ecom')
+  .addTag('Ecommmerce App')
   .build(); 
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('EcomApp/api', app, document);

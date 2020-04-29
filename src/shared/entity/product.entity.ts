@@ -1,9 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne } from 'typeorm';
 import { Category } from './category.entity'; 
-import { type } from 'os';
 
 @Entity('Produits')
-export class Product{
+export class Product {
 
     @PrimaryGeneratedColumn()
     id : number; 
@@ -20,7 +19,7 @@ export class Product{
     @CreateDateColumn()
     createdAt : Date;
 
-    @ManyToOne(type=>Category, category => category.products)
+    @ManyToOne(type=>Category, category => category.products, {cascade:true, onDelete:"CASCADE", eager:true})
     category : Category;
 
 }
