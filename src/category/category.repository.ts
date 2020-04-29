@@ -1,17 +1,28 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
+import { Repository, EntityRepository } from "typeorm";
 import { Category } from "src/shared/entity/category.entity";
-import { Repository } from "typeorm";
 
-@Injectable()
-export class CategoryRepository {
-/*
-    constructor(
-        @InjectRepository(Category)
-        protected repository : Repository<Category>
-    ){ }
 
-    async findOne(id:number) : Promise<Category>{
-        return await this.repository.findOne(id);
-    }*/
+@EntityRepository(Category)
+export class CategoryRepository extends Repository<Category> {
+
+    async findAll(): Promise<Category[]> {
+        return await this.find();
+    }
+
+    async findCategoryById(id: number): Promise<Category> {
+        return await this.findOne(id);
+    }
+
+    async createCategory(category: Partial<Category>): Promise<Category> {
+        return await this.save(category);
+    }
+
+    async updateCategory(id: number, data: Partial<Category>): Promise<Category> {
+        await this.update({ id }, data);
+        return await this.findOne({ where: { id } });
+    }
+
+    async deleteCategory(id: number) {
+        return await this.delete(id);
+    }
 }

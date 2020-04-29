@@ -4,22 +4,27 @@ import { CategoryDTO } from 'src/shared/entitiesDTO/category.dto';
 import { CreateOrUpdateCategoryDTO } from 'src/shared/entitiesDTO/create-update-category.dto';
 import { CategorySerializer } from 'src/shared/serializers/category.serializer';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ProductSerializer } from 'src/shared/serializers/product.serialiser';
+import { CategoryRepository } from './category.repository';
 
 @Injectable()
 export class CategoryService {
 
-  constructor(@InjectRepository(Category)
-  private categoryRepository: Repository<Category>) { }
+  constructor(
+    @InjectRepository(CategoryRepository)
+    private categoryRepository: CategoryRepository) { }
 
   async showAllCategories(): Promise<CategoryDTO[]> {
-    let categories = await this.categoryRepository.find();
+    let categories = await this.categoryRepository.findAll();
     return CategorySerializer.fromEntities(categories);
   }
 
-  async findOne(id: number): Promise<CategoryDTO> {
-    return CategorySerializer.fromEntity(await this.categoryRepository.findOne(id));
+  async findCategoryById(id: number): Promise<CategoryDTO> {
+
+    const categ = await this.categoryRepository.findCategoryById(id)
+    if (!categ) {
+      throw new NotFoundException('Aucune Category Trouvée');
+    }
+    return CategorySerializer.fromEntity(categ);
   }
 
   async createCategory(createOrUpdateCategoryDTO: CreateOrUpdateCategoryDTO): Promise<CategoryDTO> {
@@ -27,30 +32,22 @@ export class CategoryService {
     let category = new Category();
     category.description = createOrUpdateCategoryDTO.description;
 
-    category = await this.categoryRepository.save(category);
+    category = await this.categoryRepository.createCategory(category);
     return CategorySerializer.fromEntity(category);
+
   }
 
-  async getCategoryById(id: number): Promise<CategoryDTO> {
-    const category = await this.categoryRepository.findOne(id);
+  async updateCategory(id: number, data: Partial<Category>): Promise<CategoryDTO> {
 
-    if (!category) {
-      throw new NotFoundException('Aucune Category Trouvée');
-    }
-    return CategorySerializer.fromEntity(category);
+    const categ = await this.categoryRepository.updateCategory(id, data);
+    return CategorySerializer.fromEntity(categ);
   }
 
-  async updateCategory(id: number, data: Partial<CategoryDTO>) {
-    await this.categoryRepository.update({ id }, data);
-    return await this.categoryRepository.findOne({ where: { id } });
-  }
-
-  async deleteCategory(id: number) : Promise<void> {
-    const obj = await this.categoryRepository.findOne({ id });
-    if(!obj){
+  async deleteCategory(id: number): Promise<void> {
+    const obj = await this.categoryRepository.findCategoryById(id);
+    if (!obj) {
       throw new NotFoundException('Aucune catégorie trouvée');
     }
-    return await this.categoryRepository.delete(id).then(result => {deleted : true});
-
+    return await this.categoryRepository.deleteCategory(id).then(result => { deleted: true });
   }
 }
